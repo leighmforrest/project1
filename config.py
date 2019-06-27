@@ -15,5 +15,5 @@ class ProductionConfig(Config):
 
 app_config = {
     'development': DevelopmentConfig,
-    'prodcution': ProductionConfig
+    'production': ProductionConfig
 }
