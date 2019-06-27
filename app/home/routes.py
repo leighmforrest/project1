@@ -7,4 +7,4 @@ from app.models import get_data
 @home_blueprint.route('/')
 def home():
     data = get_data()
-    return f"{data}"
+    return render_template("home/index.html", data=data)
