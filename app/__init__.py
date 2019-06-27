@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask, session
 from flask_session import Session
 from flask_bcrypt import Bcrypt
@@ -12,7 +14,10 @@ bcrypt = Bcrypt()
 def create_app(config_name):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_object(app_config[config_name])
-    app.config.from_pyfile('config.py')
+
+    # get private config setting here
+    app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
 
     # set up extensions and blueprints
     init_extensions(app)
