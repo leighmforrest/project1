@@ -1,18 +1,47 @@
+import sys
 from flask import redirect, session, request, url_for, flash, render_template
 
 from . import auth_blueprint
+from .forms import RegistrationForm, LoginForm
+from app.utils.decorators import login_required
+from app.models import User
 
 
+@login_required
 @auth_blueprint.route("/dashboard")
 def dashboard():
     return "DASHBOARD"
 
 
-@auth_blueprint.route("/login")
+@auth_blueprint.route('/login', methods=["POST"])
 def login():
-    return "LOGIN"
+    form = LoginForm(request.form)
+
+    if form.validate_on_submit():
+        session['username'] = form.username.data
+        return redirect(url_for('home.home'))
+    else:
+        flash('Username or password incorrect', 'warning')
+        return redirect(url_for('home.home'))
 
 
+@login_required
 @auth_blueprint.route("/logout")
 def logout():
-    return "LOGOUT"
+    session.pop('username')
+    flash("You have been logged out.", 'success')
+    return redirect(url_for('home.home'))
+
+
+@auth_blueprint.route("/register", methods=["POST", "GET"])
+def register():
+    form = RegistrationForm()
+
+    if form.validate_on_submit():
+        if User.register(form.username.data, form.password.data, form.handle.data):
+            flash("User successfully registered", "success")
+        else:
+            flash("Could not register user", "warning")
+        return redirect(url_for('home.home'))
+    else:
+        return render_template("auth/register.html", form=form)
