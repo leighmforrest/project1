@@ -21,7 +21,6 @@
             </form>
           </div>
           <div class="modal-footer">
-            HAI
           </div>
         </div>
       </div>
@@ -30,8 +29,12 @@
 
 {% block content %}
 <div class="col-md-10">
-    {% for datum in data %}
-    <p>{{ datum }}</p>
-    {% endfor %}
+    {% if books %}
+      {% for book in books %}
+      <p>{{ book.title }}</p>
+      {% endfor %}
+    {% else %}
+      <p>There are no books</p>
+    {% endif %}
 </div>
 {% endblock %}

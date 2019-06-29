@@ -1,5 +1,21 @@
+from math import ceil
+
 from .utils.dao import DataAccessObject
 from . import bcrypt
+
+
+MAX_BOOKS_PER_PAGE = 5
+
+
+def page_number(page):
+    try:
+        page = int(page)
+        if page < 1:
+            page = 1
+    except TypeError:
+        page = 1
+    finally:
+        return page
 
 
 class User:
@@ -47,3 +63,43 @@ class User:
             return True
         else:
             return False
+
+
+class Book:
+    @classmethod
+    def get_random_books(cls):
+        return DataAccessObject.fetchall("SELECT authors.name, books.title, books.isbn from books JOIN authors ON authors.id=books.author_id  ORDER BY RANDOM() LIMIT :max;",
+                                         {'max': MAX_BOOKS_PER_PAGE})
+
+    @classmethod
+    def search_for_books(cls, query, page=1):
+        limit = MAX_BOOKS_PER_PAGE
+
+        results = DataAccessObject.fetchall("""
+        SELECT authors.name, books.title,books.isbn
+        FROM books
+        JOIN authors
+        ON authors.id = books.author_id
+        WHERE books.tsv @@ plainto_tsquery(:q)
+        """,
+                                            {'q': query})
+        # make sure page does not exceed page count
+        max_pages = ceil(len(results) / MAX_BOOKS_PER_PAGE)
+        if page > max_pages:
+            page = max_pages
+
+        # return a slice;
+        offset = (page - 1) * limit
+        return {'max_pages': max_pages, 'results': results[offset:limit + offset]}
+
+    @classmethod
+    def get_detail_by_isbn(cls, isbn):
+
+        return DataAccessObject.fetchone("""
+        SELECT authors.name, books.title,books.isbn
+        FROM books
+        JOIN authors
+        ON authors.id = books.author_id
+        WHERE books.isbn= :isbn
+        """,
+                                         {'isbn': isbn})

@@ -7,8 +7,8 @@ from app.utils.decorators import login_required
 from app.models import User
 
 
-@login_required
 @auth_blueprint.route("/dashboard")
+@login_required
 def dashboard():
     return "DASHBOARD"
 
@@ -25,8 +25,8 @@ def login():
         return redirect(url_for('home.home'))
 
 
-@login_required
 @auth_blueprint.route("/logout")
+@login_required
 def logout():
     session.pop('username')
     flash("You have been logged out.", 'success')
