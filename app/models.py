@@ -7,17 +7,6 @@ from . import bcrypt
 MAX_BOOKS_PER_PAGE = 5
 
 
-def page_number(page):
-    try:
-        page = int(page)
-        if page < 1:
-            page = 1
-    except TypeError:
-        page = 1
-    finally:
-        return page
-
-
 class User:
     @classmethod
     def register(cls, username, password, handle=''):
@@ -35,9 +24,13 @@ class User:
             'username': username}) == 1
 
     @classmethod
+    def get_user_id(cls, username):
+        return DataAccessObject.fetchone("SELECT id from users WHERE username = :username", {
+            'username': username})[0]
+
+    @classmethod
     def login(cls, username, password):
         user = DataAccessObject.fetchone("SELECT username, password FROM users WHERE username=:username", {'username': username})
-        print(f"USER: {user}")
         if not user:
             return False
         else:
@@ -103,3 +96,28 @@ class Book:
         WHERE books.isbn= :isbn
         """,
                                          {'isbn': isbn})
+
+    @classmethod
+    def get_id_by_isbn(cls, isbn):
+        return DataAccessObject.fetchone("""
+        SELECT books.id
+        FROM books
+        WHERE books.isbn= :isbn
+        """, {'isbn': isbn})[0]
+
+
+class Rating:
+    @classmethod
+    def add_rating(cls, username, isbn, rating, comment):
+        user_id = User.get_user_id(username)
+        book_id = Book.get_id_by_isbn(isbn)
+        rating = int(rating)
+        if user_id and book_id and not Rating.check_rating(user_id, book_id):
+            DataAccessObject.alter("INSERT INTO ratings(user_id, book_id, rating, comment) VALUES (:user_id, :book_id, :rating, :comment)", {'user_id': user_id, 'book_id': book_id, 'rating': rating, 'comment': comment})
+            return True
+        else:
+            return False
+
+    @classmethod
+    def check_rating(cls, user_id, book_id):
+        return DataAccessObject.rowcount("SELECT * from ratings WHERE (user_id=:user_id AND book_id=:book_id)", {'user_id': user_id, 'book_id': book_id})

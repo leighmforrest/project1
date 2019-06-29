@@ -4,13 +4,6 @@
 
 {% block content %}
     <div class="col-md-6 offset-md-3 mt-4">
-        <ul class="list-group">
-            {% for book in books %}
-                <li class="list-group-item"><a href="{{ url_for('books.detail', isbn=book.isbn) }}">{{ book.title }} by {{ book.name }}</a></li>
-            {% endfor %}
-        </ul>
+        {% include "partials/_link_list.html" %}
     </div>
-    <p>{{ page }}</p>
-    <p>{% if page <= max_pages and page > 1 %}<a href="{{ url_for('books.search', q=query_string, page=page-1) }}">Previous</a></p>{% endif %}
-    <p>{% if is_next %}<a href="{{ url_for('books.search', q=query_string, page=page+1) }}">Next</a>{% endif %}</p>
 {% endblock %}

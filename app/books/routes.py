@@ -1,4 +1,4 @@
-from flask import redirect, session, request, url_for, flash, render_template
+from flask import redirect, session, request, url_for, flash, render_template, abort
 
 
 from . import books_blueprint
@@ -6,7 +6,7 @@ from app.models import Book
 from app.utils.decorators import login_required
 
 
-@books_blueprint.route("/")
+@books_blueprint.route("/", methods=["GET"])
 @login_required
 def search():
   query_string = request.args.get('q')
@@ -22,14 +22,18 @@ def search():
                          is_next=is_next)
 
 
+@books_blueprint.route("/<string:isbn>", methods=["GET"])
 @login_required
-@books_blueprint.route("/<string:isbn>")
 def detail(isbn):
   book = Book.get_detail_by_isbn(isbn)
-  return render_template('books/detail.html', book=book)
+  if book:
+    return render_template('books/detail.html', book=book)
+  else:
+    abort(404)
 
 
-@books_blueprint.route("<string:isbn>/comment")
+@books_blueprint.route("<string:isbn>/comment", methods=["POST"])
+@login_required
 def create_comment(isbn):
   return f"CREATE COMMENT FOR {isbn}"
 

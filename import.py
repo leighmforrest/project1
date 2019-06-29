@@ -23,11 +23,11 @@ def add_book(book):
                                             {'name': book['author']})
 
     if author_query.rowcount > 0:
-        author_id = author_query.fetchone()['id']
+        author_id = author_query.fetchone()[0]
     else:
         DataAccessObject.alter("INSERT INTO authors (name) VALUES (:name)", {'name': book['author']})
         author_id = DataAccessObject.fetchone("SELECT id FROM authors WHERE name = :name",
-                                              {'name': book['author']})[id]
+                                              {'name': book['author']})[0]
         # add book to database
     DataAccessObject.alter("INSERT INTO BOOKS (author_id, title, isbn, year) VALUES (:author_id, :title, :isbn, :year)",
                            {'author_id': author_id, 'title': book['title'], 'isbn': book['isbn'], 'year': book['year']})

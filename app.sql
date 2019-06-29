@@ -21,5 +21,13 @@ year CHAR(4),
 tsv tsvector
 );
 
+CREATE TABLE ratings(
+id SERIAL PRIMARY KEY,
+user_id INTEGER REFERENCES users(id),
+book_id INTEGER REFERENCES books(id),
+rating SMALLINT DEFAULT 1,
+comment TEXT
+);
+
 CREATE INDEX ix_books_tsv ON books USING GIN(tsv);
 
