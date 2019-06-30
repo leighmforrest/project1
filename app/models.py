@@ -25,8 +25,9 @@ class User:
 
     @classmethod
     def get_user_id(cls, username):
-        return DataAccessObject.fetchone("SELECT id from users WHERE username = :username", {
-            'username': username})[0]
+        user = DataAccessObject.fetchone("SELECT id from users WHERE username = :username", {
+            'username': username})
+        return user[0]
 
     @classmethod
     def login(cls, username, password):
@@ -99,11 +100,15 @@ class Book:
 
     @classmethod
     def get_id_by_isbn(cls, isbn):
-        return DataAccessObject.fetchone("""
+        book = DataAccessObject.fetchone("""
         SELECT books.id
         FROM books
         WHERE books.isbn= :isbn
-        """, {'isbn': isbn})[0]
+        """, {'isbn': isbn})
+        if book:
+            return int(book[0])
+        else:
+            return None
 
 
 class Rating:
@@ -112,7 +117,7 @@ class Rating:
         user_id = User.get_user_id(username)
         book_id = Book.get_id_by_isbn(isbn)
         rating = int(rating)
-        if user_id and book_id and not Rating.check_rating(user_id, book_id):
+        if user_id and book_id and Rating.check_rating(user_id, book_id):
             DataAccessObject.alter("INSERT INTO ratings(user_id, book_id, rating, comment) VALUES (:user_id, :book_id, :rating, :comment)", {'user_id': user_id, 'book_id': book_id, 'rating': rating, 'comment': comment})
             return True
         else:
@@ -120,4 +125,53 @@ class Rating:
 
     @classmethod
     def check_rating(cls, user_id, book_id):
-        return DataAccessObject.rowcount("SELECT * from ratings WHERE (user_id=:user_id AND book_id=:book_id)", {'user_id': user_id, 'book_id': book_id})
+        """Check if user has left a rating. Return false if review was left."""
+        return DataAccessObject.rowcount("SELECT * from ratings WHERE (user_id=:user_id AND book_id=:book_id)", {'user_id': user_id, 'book_id': book_id}) == 0
+
+    @classmethod
+    def update_rating(cls, username, isbn, rating, comment):
+        user_id = User.get_user_id(username)
+        book_id = Book.get_id_by_isbn(isbn)
+        rating = int(rating)
+        if user_id and book_id and not Rating.check_rating(user_id, book_id):
+            DataAccessObject.alter("""
+                UPDATE ratings SET comment=:comment, rating=:rating
+                WHERE (user_id=:user_id AND book_id=:book_id)""",
+                                   {'user_id': user_id, 'book_id': book_id, 'comment': comment, 'rating': rating})
+            return True
+        else:
+            return False
+
+    @classmethod
+    def get_ratings_by_isbn(cls, isbn):
+        book_id = Book.get_id_by_isbn(isbn)
+        if book_id is not None:
+            return DataAccessObject.fetchall("""
+                SELECT users.handle, ratings.rating, ratings.comment
+                FROM ratings
+                JOIN users ON users.id=ratings.user_id
+                WHERE ratings.book_id=:book_id
+            """, {'book_id': book_id})
+        else:
+            return None
+
+    @classmethod
+    def get_rating_by_user_id(cls, user_id, book_id):
+        return DataAccessObject.fetchall("""
+                SELECT ratings.rating, ratings.comment
+                FROM ratings
+                WHERE user_id=:user_id AND book_id=:book_id
+            """, {'user_id': user_id, 'book_id': book_id})[0]
+
+    @classmethod
+    def delete_rating(cls, username, isbn):
+        user_id = User.get_user_id(username)
+        book_id = Book.get_id_by_isbn(isbn)
+        if user_id and book_id and not Rating.check_rating(user_id, book_id):
+            DataAccessObject.alter("""
+                DELETE FROM ratings
+                WHERE (user_id=:user_id AND book_id=:book_id)""",
+                                   {'user_id': user_id, 'book_id': book_id})
+            return True
+        else:
+            return False

@@ -2,8 +2,9 @@ from flask import redirect, session, request, url_for, flash, render_template, a
 
 
 from . import books_blueprint
-from app.models import Book
+from app.models import Book, Rating, User
 from app.utils.decorators import login_required
+from .forms import RatingForm
 
 
 @books_blueprint.route("/", methods=["GET"])
@@ -25,9 +26,24 @@ def search():
 @books_blueprint.route("/<string:isbn>", methods=["GET"])
 @login_required
 def detail(isbn):
+  # get data
+  user_id = User.get_user_id(session['username'])
   book = Book.get_detail_by_isbn(isbn)
+  book_id = Book.get_id_by_isbn(isbn)
+  ratings = Rating.get_ratings_by_isbn(isbn)
+  has_rating = Rating.check_rating(user_id, book_id)
+
+  # initialize form
+  if has_rating:
+    form = RatingForm()
+  else:
+    rating = Rating.get_rating_by_user_id(user_id, book_id)
+    form = RatingForm()
+    form.rating.data = str(rating[0])
+    form.comment.data = rating[1]
+
   if book:
-    return render_template('books/detail.html', book=book)
+    return render_template('books/detail.html', book=book, isbn=isbn, form=form, ratings=ratings, has_rating=has_rating)
   else:
     abort(404)
 
@@ -35,14 +51,35 @@ def detail(isbn):
 @books_blueprint.route("<string:isbn>/comment", methods=["POST"])
 @login_required
 def create_comment(isbn):
-  return f"CREATE COMMENT FOR {isbn}"
+  form = RatingForm(request.form)
+  username = session['username']
+  if form.validate_on_submit():
+    Rating.add_rating(username, isbn, form.rating.data, form.comment.data)
+    flash("Comment added.", "success")
+  else:
+    flash("Rating could not be added", "warning")
+  return redirect(url_for('books.detail', isbn=isbn))
 
 
-@books_blueprint.route("<string:isbn>/comment/update")
+@books_blueprint.route("<string:isbn>/comment/update", methods=["POST"])
+@login_required
 def update_comment(isbn):
-  return f"TODO: UPDATE"
+  form = RatingForm(request.form)
+  username = session['username']
+  if form.validate_on_submit():
+    Rating.update_rating(username, isbn, form.rating.data, form.comment.data)
+    # print(updated)
+    flash("Comment added.", "success")
+  else:
+    print(form.errors)
+    flash("Rating could not be added", "warning")
+  return redirect(url_for('books.detail', isbn=isbn))
 
 
-@books_blueprint.route("<string:isbn>/comment/delete")
+@books_blueprint.route("<string:isbn>/comment/delete", methods=["POST"])
+@login_required
 def delete_comment(isbn):
-  return f"DELETE COMMENT FOR {isbn}"
+  username = session['username']
+  Rating.delete_rating(username, isbn)
+  flash("Rating deleted", "danger")
+  return redirect(url_for('books.detail', isbn=isbn))

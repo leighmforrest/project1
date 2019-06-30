@@ -1,5 +1,9 @@
 {% extends 'base.html' %}
 
+{% block modal %}
+    {% include 'partials/_rating_modal.html' %}
+{% endblock %}
+
 {% block hero %}{% endblock %}
 
 {% block content %}
@@ -7,7 +11,14 @@
         <div class="card">
             <div class="card-header">{{ book.title }}</div>
             <div class="card-body">{{ book.name }}</div>
-            <div class="card-footer">Footer</div>
+            <div class="card-footer">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#pageModal">
+              Rate this book
+            </button>
+           </div>
         </div>
     </div>
+    {% for rating in ratings %}
+    <p>{{ rating }}</p>
+    {% endfor %}
 {% endblock %}

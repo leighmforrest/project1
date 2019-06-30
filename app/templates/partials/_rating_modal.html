@@ -1,0 +1,35 @@
+<div class="modal fade" id="pageModal" tabindex="-1" role="dialog" aria-labelledby="pageModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    {% block partial %}
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="pageModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        {% if has_rating %}
+          <form action="{{ url_for('books.create_comment', isbn=isbn) }}" method="post">
+        {% else %}
+          <form action="{{ url_for('books.update_comment', isbn=isbn) }}" method="post">
+        {% endif %}
+            {% from "macros/_formhelpers.html" import render_field %}
+            {{ form.hidden_tag() }}
+            {{ form.rating }}
+            {{ render_field(form.comment, class='form-control')}}
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <input type="submit" class="btn btn-primary" value="Comment" />
+        </form>
+      </div>
+      <div class="modal-footer">
+        {% if not has_rating %}
+            <form action="{{ url_for('books.delete_comment', isbn=isbn) }}" method="post">
+              <input type="submit" class="btn btn-danger" value="Delete" />
+            </form>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
