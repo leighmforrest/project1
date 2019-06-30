@@ -11,7 +11,7 @@
   {% if page and books %}
   <div class="card-body">
     {% if page <= max_pages and page > 1 %}<a href="{{ url_for('books.search', q=query_string, page=page-1) }}" class="card-link">Previous</a>{% endif %}
-    {% if is_next %}<a href="{{ url_for('books.search', q=query_string, page=page+1) }}" class="card-link">Next</a>{% endif %}
+    {% if is_next %}<a href="{{ url_for('books.search', q=query_string, page=page+1) }}" class="card-link float-right">Next</a>{% endif %}
   </div>
   {% endif %}
 </div>

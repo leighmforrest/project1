@@ -7,18 +7,31 @@
 {% block hero %}{% endblock %}
 
 {% block content %}
-    <div class="col-md-6 offset-md-3">
-        <div class="card">
-            <div class="card-header">{{ book.title }}</div>
-            <div class="card-body">{{ book.name }}</div>
-            <div class="card-footer">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#pageModal">
-              Rate this book
-            </button>
-           </div>
+        <div class="col-md-6 offset-md-3">
+            <div class="card">
+                <div class="card-header">{{ book.title }}</div>
+                <div class="card-body">{{ book.name }}</div>
+                <div class="card-footer">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#pageModal">
+                  Rate this book
+                </button>
+               </div>
+            </div>
         </div>
-    </div>
-    {% for rating in ratings %}
-    <p>{{ rating }}</p>
-    {% endfor %}
+        <div class="col-md-6 offset-md-3 mt-2">
+            <ul class="list-group">
+                {% if ratings %}
+                    <li class="list-group-item list-group-item-dark">Ratings</li>
+                    {% for rating in ratings %}
+                        <li class="list-group-item">
+                            <span class="font-weight-bold">{{ rating.handle }}</span>
+                            <span class="badge badge-pill badge-info">{{ rating.rating }}</span>
+                            <span>{{ rating.comment }}</span>
+                        </li>
+                    {% endfor %}
+                {% else %}
+                    <li class="list-group-item">There are no ratings.</li>
+                {% endif %}
+            </ul>
+        </div>
 {% endblock %}
