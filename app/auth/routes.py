@@ -1,4 +1,3 @@
-import sys
 from flask import redirect, session, request, url_for, flash, render_template
 
 from . import auth_blueprint
@@ -7,10 +6,13 @@ from app.utils.decorators import login_required
 from app.models import User
 
 
-@auth_blueprint.route("/dashboard")
+@auth_blueprint.route("/dashboard", methods=['GET', 'POST'])
 @login_required
 def dashboard():
-    return "DASHBOARD"
+    username = session['username']
+    user_data = User.get_user_data(username)
+
+    return render_template('auth/dashboard.html', handle=user_data[1])
 
 
 @auth_blueprint.route('/login', methods=["POST"])
@@ -38,7 +40,10 @@ def register():
     form = RegistrationForm()
 
     if form.validate_on_submit():
-        if User.register(form.username.data, form.password.data, form.handle.data):
+        if User.register(
+                form.username.data,
+                form.password.data,
+                form.handle.data):
             flash("User successfully registered", "success")
         else:
             flash("Could not register user", "warning")

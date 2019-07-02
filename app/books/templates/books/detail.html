@@ -7,9 +7,9 @@
 {% block hero %}{% endblock %}
 
 {% block content %}
-        <div class="col-md-6 offset-md-3">
-            <div class="card">
-                <div class="card-header">{{ book.title }}</div>
+        <div class="col-md-8 mb-3">
+            <div class="card text-center">
+                <div class="card-header"><h3>{{ book.title }}</h3></div>
                 <div class="card-body">{{ book.name }}</div>
                 <div class="card-footer">
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#pageModal">
@@ -17,6 +17,16 @@
                 </button>
                </div>
             </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-header">goodreads</div>
+                <div class="card-body">Average Rating: 4</div>
+                <div class="card-footer">
+                    Rating Count: 1
+               </div>
+            </div>
+        </div>
         </div>
         <div class="col-md-6 offset-md-3 mt-2">
             <ul class="list-group">
@@ -30,7 +40,7 @@
                         </li>
                     {% endfor %}
                 {% else %}
-                    <li class="list-group-item">There are no ratings.</li>
+                    <li class="list-group-item text-center">There are no ratings.</li>
                 {% endif %}
             </ul>
         </div>

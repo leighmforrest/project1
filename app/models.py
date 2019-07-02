@@ -13,7 +13,8 @@ class User:
         if not User.user_exists(username):
             # encrypt password for save
             password = bcrypt.generate_password_hash(password).decode('utf-8')
-            DataAccessObject.alter("INSERT INTO users(username, password, handle) VALUES (:username, :password, :handle)", {'username': username, 'password': password, 'handle': handle})
+            DataAccessObject.alter(
+                "INSERT INTO users(username, password, handle) VALUES (:username, :password, :handle)", {'username': username, 'password': password, 'handle': handle})
             return True
         else:
             return False
@@ -28,6 +29,12 @@ class User:
         user = DataAccessObject.fetchone("SELECT id from users WHERE username = :username", {
             'username': username})
         return user[0]
+
+    @classmethod
+    def get_user_data(cls, username):
+        user = DataAccessObject.fetchone("SELECT username, handle from users WHERE username = :username", {
+            'username': username})
+        return user
 
     @classmethod
     def login(cls, username, password):
@@ -45,15 +52,6 @@ class User:
             password = bcrypt.generate_password_hash(password).decode("utf-8")
             DataAccessObject.alter("UPDATE users SET password = :password WHERE username = :username",
                                    {'username': username, 'password': password})
-            return True
-        else:
-            return False
-
-    @classmethod
-    def change_user_data(cls, username, new_username, handle):
-        if User.user_exists(username):
-            DataAccessObject.alter("UPDATE users SET username = :new_username, handle = :handle WHERE username = :username",
-                                   {'username': username, 'new_username': username, 'handle': handle})
             return True
         else:
             return False

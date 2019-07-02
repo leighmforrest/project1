@@ -19,12 +19,17 @@
             {{ form.rating }}
             {{ render_field(form.comment, class='form-control')}}
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            {% if has_rating %}
             <input type="submit" class="btn btn-primary" value="Comment" />
+            {% else %}
+            <input type="submit" class="btn btn-primary" value="Update" />
+            {% endif %}
         </form>
       </div>
       <div class="modal-footer">
         {% if not has_rating %}
             <form action="{{ url_for('books.delete_comment', isbn=isbn) }}" method="post">
+              {{ delete_rating_form.hidden_tag() }}
               <input type="submit" class="btn btn-danger" value="Delete" />
             </form>
         {% endif %}
