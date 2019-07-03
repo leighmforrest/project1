@@ -10,7 +10,7 @@ class RegistrationForm(FlaskForm):
         Length(min=5, max=25,
                message="Username must be between 5 and 25 characters")])
     handle = StringField('Handle', validators=[
-        Length(max=25, message="Username cannot exceed 25 characters")])
+        Length(max=25, message="Handle cannot exceed 25 characters")])
     password = PasswordField('Password', validators=[
         DataRequired(),
         Length(min=8, max=25,
@@ -36,3 +36,8 @@ class LoginForm(FlaskForm):
             return True
         else:
             self.password.errors.append('Incorrect email or password')
+
+
+class EditUserForm(FlaskForm):
+    handle = StringField('Handle', validators=[
+        Length(max=25, message="Handle cannot exceed 25 characters")])

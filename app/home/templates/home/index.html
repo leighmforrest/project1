@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% block title %}{{ super() }} - Welcome{% endblock%}
+
 {% block modal %}
   {% include 'partials/_login_modal.html' %}
 {% endblock %}

@@ -21,13 +21,13 @@ class User:
 
     @classmethod
     def user_exists(cls, username):
-        return DataAccessObject.rowcount("SELECT username from users WHERE username = :username", {
-            'username': username}) == 1
+        return DataAccessObject.rowcount("SELECT username from users WHERE username = :username",
+                                         {'username': username}) == 1
 
     @classmethod
     def get_user_id(cls, username):
-        user = DataAccessObject.fetchone("SELECT id from users WHERE username = :username", {
-            'username': username})
+        user = DataAccessObject.fetchone("SELECT id from users WHERE username = :username",
+                                         {'username': username})
         return user[0]
 
     @classmethod
@@ -38,7 +38,8 @@ class User:
 
     @classmethod
     def login(cls, username, password):
-        user = DataAccessObject.fetchone("SELECT username, password FROM users WHERE username=:username", {'username': username})
+        user = DataAccessObject.fetchone("SELECT username, password FROM users WHERE username=:username",
+                                         {'username': username})
         if not user:
             return False
         else:
@@ -52,6 +53,16 @@ class User:
             password = bcrypt.generate_password_hash(password).decode("utf-8")
             DataAccessObject.alter("UPDATE users SET password = :password WHERE username = :username",
                                    {'username': username, 'password': password})
+            return True
+        else:
+            return False
+
+    @classmethod
+    def change_handle(cls, username, handle):
+        if DataAccessObject.rowcount('SELECT username FROM users WHERE username = :username',
+                                     {'username': username}) > 0:
+            DataAccessObject.alter("UPDATE users SET handle = :handle WHERE username = :username",
+                                   {'username': username, 'handle': handle})
             return True
         else:
             return False
@@ -135,7 +146,10 @@ class Rating:
             DataAccessObject.alter("""
                 UPDATE ratings SET comment=:comment, rating=:rating
                 WHERE (user_id=:user_id AND book_id=:book_id)""",
-                                   {'user_id': user_id, 'book_id': book_id, 'comment': comment, 'rating': rating})
+                                   {'user_id': user_id,
+                                    'book_id': book_id,
+                                    'comment': comment,
+                                    'rating': rating})
             return True
         else:
             return False

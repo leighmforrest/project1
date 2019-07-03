@@ -7,41 +7,10 @@
 {% block hero %}{% endblock %}
 
 {% block content %}
-        <div class="col-md-8 mb-3">
-            <div class="card text-center">
-                <div class="card-header"><h3>{{ book.title }}</h3></div>
-                <div class="card-body">{{ book.name }}</div>
-                <div class="card-footer">
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#pageModal">
-                  Rate this book
-                </button>
-               </div>
-            </div>
+        <div class="col-md-6 mb-3">
+            1
         </div>
         <div class="col-md-4">
-            <div class="card text-center">
-                <div class="card-header">goodreads</div>
-                <div class="card-body">Average Rating: 4</div>
-                <div class="card-footer">
-                    Rating Count: 1
-               </div>
-            </div>
-        </div>
-        </div>
-        <div class="col-md-6 offset-md-3 mt-2">
-            <ul class="list-group">
-                {% if ratings %}
-                    <li class="list-group-item list-group-item-dark">Ratings</li>
-                    {% for rating in ratings %}
-                        <li class="list-group-item">
-                            <span class="font-weight-bold">{{ rating.handle }}</span>
-                            <span class="badge badge-pill badge-info">{{ rating.rating }}</span>
-                            <span>{{ rating.comment }}</span>
-                        </li>
-                    {% endfor %}
-                {% else %}
-                    <li class="list-group-item text-center">There are no ratings.</li>
-                {% endif %}
-            </ul>
+            3
         </div>
 {% endblock %}

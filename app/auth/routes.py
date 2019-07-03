@@ -1,7 +1,7 @@
 from flask import redirect, session, request, url_for, flash, render_template
 
 from . import auth_blueprint
-from .forms import RegistrationForm, LoginForm
+from .forms import RegistrationForm, LoginForm, EditUserForm
 from app.utils.decorators import login_required
 from app.models import User
 
@@ -9,10 +9,18 @@ from app.models import User
 @auth_blueprint.route("/dashboard", methods=['GET', 'POST'])
 @login_required
 def dashboard():
+    form = EditUserForm()
     username = session['username']
-    user_data = User.get_user_data(username)
 
-    return render_template('auth/dashboard.html', handle=user_data[1])
+    if form.validate_on_submit():
+        User.change_handle(username, form.handle.data)
+        flash('User handle changed', 'success')
+    elif request.method == 'GET':
+        handle = User.get_user_data(username)[1]
+        form.handle.data = handle
+
+    handle = User.get_user_data(username)[1]
+    return render_template('auth/dashboard.html', handle=handle, form=form)
 
 
 @auth_blueprint.route('/login', methods=["POST"])

@@ -1,3 +1,9 @@
-body {
-    background-color: red;
-}
+body, html {
+  height: 100%;
+  padding-top: 40px; }
+
+main {
+  min-height: 500px; }
+
+.flash {
+  min-height: 67px; }
