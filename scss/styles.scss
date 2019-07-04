@@ -1,18 +1,38 @@
+$BRAND: 'Cormorant Garamond', serif;
+$MAIN_FONT: 'Lato', sans-serif;
+$MAIN_FONT_SIZE: 1.25rem;
+$FONT_COLOR:red;
+
 body, html {
     height: 100%;
     width: 100%;
-    padding-top:40px;
+    padding-top:45px;
+    font-family: $MAIN_FONT;
+    size: $MAIN_FONT_SIZE;
 }
 
 .container {
-    min-height: 500px;
+    height: 400px;
     margin-bottom: 2rem;
 }
 
-#messages {
+#messages > .row {
     min-height:100px;
 }
 
 .card {
     height: 100%;
 }
+
+/* NAVBAR STYLES */
+.navbar {
+    >.navbar-brand {
+        font-family: $BRAND;
+        font-size: 1.5rem;
+        color: $FONT_COLOR;
+        &:hover {
+            color: $FONT_COLOR;
+        }
+    }
+}
+

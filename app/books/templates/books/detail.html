@@ -41,14 +41,20 @@
         <div class="col-md-12">
             <div class="card">
               <ul class="list-group list-group-flush">
-                {% for rating in ratings %}
-                <li class="list-group-item">
-                    <span class="font-weight-bold">{{ rating.handle }}</span>
-                    <span class="badge badge-pill badge-primary">
-                        {{ rating.rating }}
-                    </span>
-                    {{ rating.comment }}</li>
-                {% endfor %}
+                {% if ratings %}
+                    {% for rating in ratings %}
+                    <li class="list-group-item">
+                        <span class="font-weight-bold">{{ rating.handle }}</span>
+                        <span class="badge badge-pill badge-primary">
+                            {{ rating.rating }}
+                        </span>
+                        {{ rating.comment }}</li>
+                    {% endfor %}
+                {% else %}
+                    <li class="list-group-item">
+                        There are no ratings for this book.
+                    </li>
+                {% endif %}
               </ul>
             </div>
         </div>
