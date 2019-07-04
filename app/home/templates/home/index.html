@@ -6,14 +6,20 @@
   {% include 'partials/_login_modal.html' %}
 {% endblock %}
 
-{% include 'partials/_jumbotron.html' %}
-
 {% block content %}
-<div class="col-md-10">
-    {% if books %}
-      {% include 'partials/_link_list.html' %}
-    {% else %}
-      <p>There are no books</p>
-    {% endif %}
+<div class="container">
+        {% include 'macros/_flashmessages.html' %}
+    <div class="row">
+        <div class="col-md-8">
+            {% if books %}
+              {% include 'partials/_link_list.html' %}
+            {% else %}
+              <p>There are no books</p>
+            {% endif %}
+        </div>
+        <div class="col-md-4">
+            x
+        </div>
+    </div>
 </div>
 {% endblock %}

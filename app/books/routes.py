@@ -3,7 +3,7 @@ from flask import (redirect, session, request, url_for,
 
 
 from . import books_blueprint
-from app.models import Book, Rating, User
+from app.models import Book, Rating, User, goodreads
 from app.utils.decorators import login_required
 from .forms import RatingForm, DeleteRatingForm
 
@@ -35,6 +35,7 @@ def detail(isbn):
     has_rating = Rating.check_rating(user_id, book_id)
 
     # fetch goodreads data
+    goodreads_data = goodreads(isbn)
 
     # initialize rating form
     if has_rating:
@@ -52,7 +53,8 @@ def detail(isbn):
         return render_template('books/detail.html', book=book, isbn=isbn,
                                form=form,
                                delete_rating_form=delete_rating_form,
-                               ratings=ratings, has_rating=has_rating)
+                               ratings=ratings, has_rating=has_rating,
+                               goodreads=goodreads_data)
     else:
         abort(404)
 

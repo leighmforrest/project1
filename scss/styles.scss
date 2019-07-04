@@ -1,11 +1,18 @@
 body, html {
-  height: 100%;
-  padding-top:40px; }
-
-main {
-    min-height: 500px;
+    height: 100%;
+    width: 100%;
+    padding-top:40px;
 }
 
-.flash {
-    min-height: 67px;
+.container {
+    min-height: 500px;
+    margin-bottom: 2rem;
+}
+
+#messages {
+    min-height:100px;
+}
+
+.card {
+    height: 100%;
 }

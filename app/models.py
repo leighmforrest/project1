@@ -1,10 +1,17 @@
 from math import ceil
 
+import requests
+
 from .utils.dao import DataAccessObject
 from . import bcrypt
 
 
 MAX_BOOKS_PER_PAGE = 5
+
+
+def goodreads(isbn):
+    res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": "jAmnWGCDLBNw8PIyEZA", "isbns": isbn})
+    return res.json()['books'][0]
 
 
 class User:
