@@ -1,6 +1,7 @@
 from math import ceil
 
 import requests
+import os
 
 from .utils.dao import DataAccessObject
 from . import bcrypt
@@ -10,7 +11,8 @@ MAX_BOOKS_PER_PAGE = 5
 
 
 def goodreads(isbn):
-    res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": "jAmnWGCDLBNw8PIyEZA", "isbns": isbn})
+    res = requests.get("https://www.goodreads.com/book/review_counts.json",
+                       params={"key": os.getenv('GOODREADS_KEY'), "isbns": isbn})
     return res.json()['books'][0]
 
 
@@ -21,7 +23,8 @@ class User:
             # encrypt password for save
             password = bcrypt.generate_password_hash(password).decode('utf-8')
             DataAccessObject.alter(
-                "INSERT INTO users(username, password, handle) VALUES (:username, :password, :handle)", {'username': username, 'password': password, 'handle': handle})
+                "INSERT INTO users(username, password, handle) VALUES (:username, :password, :handle)",
+                {'username': username, 'password': password, 'handle': handle})
             return True
         else:
             return False
@@ -106,7 +109,7 @@ class Book:
     def get_detail_by_isbn(cls, isbn):
 
         return DataAccessObject.fetchone("""
-        SELECT authors.name, books.title,books.isbn
+        SELECT authors.name, books.title,books.isbn, books.year
         FROM books
         JOIN authors
         ON authors.id = books.author_id
