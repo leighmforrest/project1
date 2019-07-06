@@ -4,6 +4,8 @@ Web Programming with Python and JavaScript
 
 ## Classic Book Report
 
+This website allows users to search and rate curated books, and see how they are rated on the Goodreads platform.
+
 ## Files
 
 ### /app
@@ -44,11 +46,13 @@ Web Programming with Python and JavaScript
 #### /utils
 * **__init__.py**: file to make utils a package
 * **dao.py**: script for basic database actions
-* **decorators.py: script for application decorators. Used mainly for authenticating routes
+* **decorators.py**: script for application decorators. Used mainly for authenticating routes
 * **__init__.py**: makes the app folder a package. Contains the [application factory function](http://flask.pocoo.org/docs/1.0/patterns/appfactories/)
 
 ### /scss
 **styles.scss**: the SASS file for the web application
+
+### /
 
 **app.sql**: SQL file for the the application
 
@@ -63,3 +67,21 @@ Web Programming with Python and JavaScript
 **Procfile**: File used to run the app on Heroku
 
 **reuqirements.txt**: List of Python modules required for the appliction 
+
+## Environment Variables
+
+**DATABASE_URL**: The url where the database is accessed
+
+**FLASK_APP**: The file where the application is run. In this case, it's application.py
+
+**FLASK_CONFIG**: The name of the configuration. They are in the dictionary in config.py
+
+**GOODREADS_KEY**: The goodreads API key
+
+**SECRET_KEY**: String of characters needed for having sessions enabled
+
+## Works Cited
+
+Escobar, Jorge. (https://github.com/esfoobar/flogger)[Flogger]. Accessed July 4, 2019.
+
+Nzomo, Mbithe. (https://scotch.io/tutorials/build-a-crud-web-app-with-python-and-flask-part-one) [Build a CRUD Web App With Python and Flask - Part One]. December 20, 2016. Accesed July 4, 2019.
