@@ -11,15 +11,15 @@ from app.models import User
 def dashboard():
     form = EditUserForm()
     username = session['username']
+    handle = User.get_user_data(username)[1]
 
     if form.validate_on_submit():
         User.change_handle(username, form.handle.data)
         flash('User handle changed', 'success')
+        return redirect(url_for('auth.dashboard'))
     elif request.method == 'GET':
-        handle = User.get_user_data(username)[1]
         form.handle.data = handle
 
-    handle = User.get_user_data(username)[1]
     return render_template('auth/dashboard.html', handle=handle, form=form)
 
 

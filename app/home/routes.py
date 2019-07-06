@@ -10,7 +10,9 @@ from app.models import Book, goodreads
 def home():
     login_form = LoginForm()
     books = Book.get_random_books()
-    return render_template("home/index.html", login_form=login_form, books=books)
+    return render_template("home/index.html",
+                           login_form=login_form,
+                           books=books)
 
 
 @home_blueprint.route("/api/<string:isbn>", methods=["GET"])

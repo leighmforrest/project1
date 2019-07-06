@@ -1,7 +1,7 @@
 $BRAND: 'Cormorant Garamond', serif;
 $MAIN_FONT: 'Lato', sans-serif;
 $MAIN_FONT_SIZE: 1.25rem;
-$FONT_COLOR:red;
+$FONT_COLOR: #F04B4B;
 
 body, html {
     height: 100%;
@@ -28,11 +28,17 @@ body, html {
 .navbar {
     >.navbar-brand {
         font-family: $BRAND;
-        font-size: 1.5rem;
+        font-size: 2rem;
         color: $FONT_COLOR;
         &:hover {
             color: $FONT_COLOR;
         }
     }
+    a {
+        color: #D28779;
+        font-size: 1.5rem;
+    }
 }
-
+.navbar-light {
+        background-color: #DED798;
+}

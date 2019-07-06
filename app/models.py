@@ -12,7 +12,8 @@ MAX_BOOKS_PER_PAGE = 5
 
 def goodreads(isbn):
     res = requests.get("https://www.goodreads.com/book/review_counts.json",
-                       params={"key": os.getenv('GOODREADS_KEY'), "isbns": isbn})
+                       params={"key": os.getenv('GOODREADS_KEY'),
+                               "isbns": isbn})
     return res.json()['books'][0]
 
 
@@ -22,9 +23,12 @@ class User:
         if not User.user_exists(username):
             # encrypt password for save
             password = bcrypt.generate_password_hash(password).decode('utf-8')
-            DataAccessObject.alter(
-                "INSERT INTO users(username, password, handle) VALUES (:username, :password, :handle)",
-                {'username': username, 'password': password, 'handle': handle})
+            DataAccessObject.alter("""
+                INSERT INTO users(username, password, handle)
+                VALUES (:username, :password, :handle)
+                """, {'username': username,
+                      'password': password,
+                      'handle': handle})
             return True
         else:
             return False
@@ -81,8 +85,13 @@ class User:
 class Book:
     @classmethod
     def get_random_books(cls):
-        return DataAccessObject.fetchall("SELECT authors.name, books.title, books.isbn from books JOIN authors ON authors.id=books.author_id  ORDER BY RANDOM() LIMIT :max;",
-                                         {'max': MAX_BOOKS_PER_PAGE})
+        return DataAccessObject.fetchall("""
+            SELECT authors.name, books.title, books.isbn
+            FROM books
+            JOIN authors
+            ON authors.id=books.author_id
+            ORDER BY RANDOM() LIMIT :max
+            """, {'max': MAX_BOOKS_PER_PAGE})
 
     @classmethod
     def search_for_books(cls, query, page=1):
@@ -103,7 +112,8 @@ class Book:
 
         # return a slice;
         offset = (page - 1) * limit
-        return {'max_pages': max_pages, 'results': results[offset:limit + offset]}
+        return {'max_pages': max_pages,
+                'results': results[offset:limit + offset]}
 
     @classmethod
     def get_detail_by_isbn(cls, isbn):
@@ -137,7 +147,11 @@ class Rating:
         book_id = Book.get_id_by_isbn(isbn)
         rating = int(rating)
         if user_id and book_id and Rating.check_rating(user_id, book_id):
-            DataAccessObject.alter("INSERT INTO ratings(user_id, book_id, rating, comment) VALUES (:user_id, :book_id, :rating, :comment)", {'user_id': user_id, 'book_id': book_id, 'rating': rating, 'comment': comment})
+            DataAccessObject.alter("INSERT INTO ratings(user_id, book_id, rating, comment) VALUES (:user_id, :book_id, :rating, :comment)", {
+                'user_id': user_id,
+                'book_id': book_id,
+                'rating': rating,
+                'comment': comment})
             return True
         else:
             return False
@@ -145,7 +159,10 @@ class Rating:
     @classmethod
     def check_rating(cls, user_id, book_id):
         """Check if user has left a rating. Return false if review was left."""
-        return DataAccessObject.rowcount("SELECT * from ratings WHERE (user_id=:user_id AND book_id=:book_id)", {'user_id': user_id, 'book_id': book_id}) == 0
+        return DataAccessObject.rowcount("""
+            SELECT * from ratings
+            WHERE (user_id=:user_id AND book_id=:book_id)
+            """, {'user_id': user_id, 'book_id': book_id}) == 0
 
     @classmethod
     def update_rating(cls, username, isbn, rating, comment):

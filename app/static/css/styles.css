@@ -18,7 +18,14 @@ body, html {
 /* NAVBAR STYLES */
 .navbar > .navbar-brand {
   font-family: "Cormorant Garamond", serif;
-  font-size: 1.5rem;
-  color: red; }
+  font-size: 2rem;
+  color: #F04B4B; }
   .navbar > .navbar-brand:hover {
-    color: red; }
+    color: #F04B4B; }
+
+.navbar a {
+  color: #D28779;
+  font-size: 1.5rem; }
+
+.navbar-light {
+  background-color: #DED798; }
