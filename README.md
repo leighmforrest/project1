@@ -26,7 +26,7 @@ Web Programming with Python and JavaScript
 * **templates**
 * **routes.py**: file containing the views for the homepage and the book data api
 
-#### static/css/styles.css**: The compiled css file
+#### static/css/styles.css: The compiled css file
 
 * **templates**: folder containing templates used throughout the app
 * **macros**
@@ -41,10 +41,25 @@ Web Programming with Python and JavaScript
     * **_rating_modal.html**: markup for the rating form
 * **base.html**: The base template
 
-#### utils
-**__init__.py: file to make utils a package
-**dao.py**: script for basic database actions
-**decorators.py**: script for application decorators. Used mainly for authenticating routes
+#### /utils
+* **__init__.py**: file to make utils a package
+* **dao.py**: script for basic database actions
+* **decorators.py: script for application decorators. Used mainly for authenticating routes
+* **__init__.py**: makes the app folder a package. Contains the [application factory function](http://flask.pocoo.org/docs/1.0/patterns/appfactories/)
 
-**__init__.py**: makes the app folder a package. Contains the [application factory function](http://flask.pocoo.org/docs/1.0/patterns/appfactories/)
+### /scss
+**styles.scss**: the SASS file for the web application
 
+**app.sql**: SQL file for the the application
+
+**application.py**: The script that runs the application
+
+**books.csv**: The data for the curated list
+
+**config.py**: Configuration for the application
+
+**import.py**: File for importing the csv data into the datbase
+
+**Procfile**: File used to run the app on Heroku
+
+**reuqirements.txt**: List of Python modules required for the appliction 
